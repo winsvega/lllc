@@ -1574,8 +1574,6 @@ void ExpressionCompiler::appendExternalFunctionCall(
 		m_context << u256(32);
 		utils().fetchFreeMemoryPointer();
 		m_context << Instruction::SUB << Instruction::MLOAD;
-		m_context << Instruction::DUP1 << Instruction::ISZERO;
-		m_context.appendConditionalJumpTo(m_context.errorTag());
 	}
 	else if (!_functionType.returnParameterTypes().empty())
 	{

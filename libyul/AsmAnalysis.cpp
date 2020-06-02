@@ -763,6 +763,29 @@ void AsmAnalyzer::warnOnInstructions(dev::eth::Instruction _instr, SourceLocatio
 				"Use functions, \"switch\", \"if\" or \"for\" statements instead."
 			);
 	}
+	else if (
+		_instr == dev::eth::Instruction::JUMPSUB ||
+		_instr == dev::eth::Instruction::BEGINSUB ||
+		_instr == dev::eth::Instruction::RETURNSUB
+	)
+	{
+		if (m_dialect.flavour == AsmFlavour::Loose)
+			m_errorReporter.error(
+				m_errorTypeForLoose ? *m_errorTypeForLoose : Error::Type::Warning,
+				_location,
+				"Subroutines instructions are low-level EVM features that can lead to "
+				"incorrect stack access. Because of that they are discouraged. "
+				"Please consider using \"function\" statement instead."
+			);
+		else
+			m_errorReporter.error(
+				Error::Type::SyntaxError,
+				_location,
+				"Subroutines instructions are low-level EVM features that can lead to "
+				"incorrect stack access. Because of that they are disallowed in strict assembly. "
+				"Please consider using \"function\" statement instead."
+			);
+	}
 }
 
 void AsmAnalyzer::checkLooseFeature(SourceLocation const& _location, string const& _description)

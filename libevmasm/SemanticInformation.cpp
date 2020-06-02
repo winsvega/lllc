@@ -108,7 +108,10 @@ bool SemanticInformation::isSwapInstruction(AssemblyItem const& _item)
 
 bool SemanticInformation::isJumpInstruction(AssemblyItem const& _item)
 {
-	return _item == Instruction::JUMP || _item == Instruction::JUMPI;
+	return _item == Instruction::JUMP
+	       || _item == Instruction::JUMPI
+	       || _item == Instruction::JUMPSUB
+	       || _item == Instruction::RETURNSUB;
 }
 
 bool SemanticInformation::altersControlFlow(AssemblyItem const& _item)
@@ -126,6 +129,8 @@ bool SemanticInformation::altersControlFlow(AssemblyItem const& _item)
 	case Instruction::STOP:
 	case Instruction::INVALID:
 	case Instruction::REVERT:
+	case Instruction::JUMPSUB:
+	case Instruction::RETURNSUB:
 		return true;
 	default:
 		return false;
@@ -177,6 +182,7 @@ bool SemanticInformation::isDeterministic(AssemblyItem const& _item)
 	case Instruction::EXTCODEHASH:
 	case Instruction::RETURNDATACOPY: // depends on previous calls
 	case Instruction::RETURNDATASIZE:
+	case Instruction::RETURNSUB: // depends on return stack
 		return false;
 	default:
 		return true;
@@ -203,6 +209,8 @@ bool SemanticInformation::movable(Instruction _instruction)
 	case Instruction::PC:
 	case Instruction::MSIZE:
 	case Instruction::GAS:
+	case Instruction::BEGINSUB:
+	case Instruction::RETURNSUB:
 		return false;
 	default:
 		return true;
@@ -310,6 +318,9 @@ bool SemanticInformation::invalidInViewFunctions(Instruction _instruction)
 	case Instruction::DELEGATECALL:
 	case Instruction::CREATE2:
 	case Instruction::SELFDESTRUCT:
+	case Instruction::BEGINSUB:
+	case Instruction::RETURNSUB:
+	case Instruction::JUMPSUB:
 		return true;
 	default:
 		break;

@@ -44,6 +44,10 @@ bool EVMVersion::hasOpcode(Instruction _opcode) const
 		return hasChainID();
 	case Instruction::SELFBALANCE:
 		return hasSelfBalance();
+	case Instruction::BEGINSUB:
+	case Instruction::RETURNSUB:
+	case Instruction::JUMPSUB:
+		return hasSubroutines();
 	default:
 		return true;
 	}

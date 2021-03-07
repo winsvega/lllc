@@ -2,6 +2,7 @@
 
 Language Features:
  * Allow to obtain the selector of public or external library functions via a member ``.selector``.
+ * Assembly: Add ``BEGINSUB``, ``RETURNSUB``, ``JUMPSUB`` (EIP2315) instructions.
 
 
 Compiler Features:

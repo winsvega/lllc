@@ -407,13 +407,14 @@ u256 EVMInstructionInterpreter::eval(
 	case Instruction::JUMPTO:
 	case Instruction::JUMPIF:
 	case Instruction::JUMPV:
-	case Instruction::JUMPSUB:
 	case Instruction::JUMPSUBV:
-	case Instruction::BEGINSUB:
 	case Instruction::BEGINDATA:
-	case Instruction::RETURNSUB:
 	case Instruction::PUTLOCAL:
 	case Instruction::GETLOCAL:
+	// --------------- EIP 2315 ---------------
+	case Instruction::JUMPSUB:
+	case Instruction::BEGINSUB:
+	case Instruction::RETURNSUB:
 	{
 		yulAssert(false, "");
 		return 0;

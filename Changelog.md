@@ -1,3 +1,6 @@
+### 0.5.16w
+ * Assembly: Add ``RANDOM`` (EIP4399) instructions.
+
 ### 0.5.15w
  * Assembly: Add ``BASEFEE`` (EIP3198) instructions.
 

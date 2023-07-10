@@ -337,6 +337,8 @@ u256 EVMInstructionInterpreter::eval(
 		throw ExplicitlyTerminated();
 	case Instruction::POP:
 		break;
+    case Instruction::BLOBHASH:
+        return 0;
 	// --------------- invalid in strict assembly ---------------
 	case Instruction::JUMP:
 	case Instruction::JUMPI:

@@ -1,0 +1,82 @@
+--- a/libsolidity/analysis/GlobalContext.cpp
++++ b/libsolidity/analysis/GlobalContext.cpp
+@@ -91,7 +91,7 @@ vector<Declaration const*> GlobalContext::declarations() const
+ {
+ 	vector<Declaration const*> declarations;
+ 	declarations.reserve(m_magicVariables.size());
+-	for (ASTPointer<Declaration const> const& variable: m_magicVariables)
++	for (ASTPointer<Declaration const> const variable: m_magicVariables)
+ 		declarations.push_back(variable.get());
+ 	return declarations;
+ }
+diff --git a/libsolidity/codegen/ContractCompiler.cpp b/libsolidity/codegen/ContractCompiler.cpp
+index a9c3990f8d2e..d4e2c66b786f 100644
+--- a/libsolidity/codegen/ContractCompiler.cpp
++++ b/libsolidity/codegen/ContractCompiler.cpp
+@@ -512,13 +512,13 @@ bool ContractCompiler::visit(FunctionDefinition const& _function)
+ 	if (!_function.isConstructor())
+ 		// adding 1 for return address.
+ 		m_context.adjustStackOffset(parametersSize + 1);
+-	for (ASTPointer<VariableDeclaration const> const& variable: _function.parameters())
++	for (ASTPointer<VariableDeclaration const> const variable: _function.parameters())
+ 	{
+ 		m_context.addVariable(*variable, parametersSize);
+ 		parametersSize -= variable->annotation().type->sizeOnStack();
+ 	}
+ 
+-	for (ASTPointer<VariableDeclaration const> const& variable: _function.returnParameters())
++	for (ASTPointer<VariableDeclaration const> const variable: _function.returnParameters())
+ 		appendStackVariableInitialisation(*variable);
+ 
+ 	if (_function.isConstructor())
+@@ -571,7 +571,7 @@ bool ContractCompiler::visit(FunctionDefinition const& _function)
+ 		if (stackLayout[i] != i)
+ 			solAssert(false, "Invalid stack layout on cleanup.");
+ 
+-	for (ASTPointer<VariableDeclaration const> const& variable: _function.parameters() + _function.returnParameters())
++	for (ASTPointer<VariableDeclaration const> const variable: _function.parameters() + _function.returnParameters())
+ 		m_context.removeVariable(*variable);
+ 
+ 	m_context.adjustStackOffset(-(int)c_returnValuesSize);
+diff --git a/libyul/optimiser/NameCollector.cpp b/libyul/optimiser/NameCollector.cpp
+index 04631a86ae73..15d74b59be4b 100644
+--- a/libyul/optimiser/NameCollector.cpp
++++ b/libyul/optimiser/NameCollector.cpp
+@@ -35,9 +35,9 @@ void NameCollector::operator()(VariableDeclaration const& _varDecl)
+ void NameCollector::operator ()(FunctionDefinition const& _funDef)
+ {
+ 	m_names.emplace(_funDef.name);
+-	for (auto const arg: _funDef.parameters)
++	for (auto const& arg: _funDef.parameters)
+ 		m_names.emplace(arg.name);
+-	for (auto const ret: _funDef.returnVariables)
++	for (auto const& ret: _funDef.returnVariables)
+ 		m_names.emplace(ret.name);
+ 	ASTWalker::operator ()(_funDef);
+ }
+diff --git a/test/libsolidity/SolidityTypes.cpp b/test/libsolidity/SolidityTypes.cpp
+index dc3b18c88ab6..8e80230bf462 100644
+--- a/test/libsolidity/SolidityTypes.cpp
++++ b/test/libsolidity/SolidityTypes.cpp
+@@ -266,7 +266,7 @@ BOOST_AUTO_TEST_CASE(helper_bool_result)
+ 
+ 	BoolResult r7{true};
+ 	// Attention: this will implicitly convert to bool.
+-	BoolResult r8{"true"};
++	BoolResult r8{true};
+ 	r7.merge(r8, logical_and<bool>());
+ 	BOOST_REQUIRE_EQUAL(r7.get(), true);
+ 	BOOST_REQUIRE_EQUAL(r7.message(), "");
+diff --git a/test/tools/yulInterpreter/EVMInstructionInterpreter.cpp b/test/tools/yulInterpreter/EVMInstructionInterpreter.cpp
+index 44e533f5040c..f9b90609d0c1 100644
+--- a/test/tools/yulInterpreter/EVMInstructionInterpreter.cpp
++++ b/test/tools/yulInterpreter/EVMInstructionInterpreter.cpp
+@@ -337,6 +337,8 @@ u256 EVMInstructionInterpreter::eval(
+ 		throw ExplicitlyTerminated();
+ 	case Instruction::POP:
+ 		break;
++    case Instruction::BLOBHASH:
++        return 0;
+ 	// --------------- invalid in strict assembly ---------------
+ 	case Instruction::JUMP:
+ 	case Instruction::JUMPI:

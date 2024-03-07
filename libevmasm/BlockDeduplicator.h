@@ -65,7 +65,7 @@ private:
 	/// Iterator that skips tags and skips to the end if (all branches of) the control
 	/// flow does not continue to the next instruction.
 	/// If the arguments are supplied to the constructor, replaces items on the fly.
-	struct BlockIterator: std::iterator<std::forward_iterator_tag, AssemblyItem const>
+	struct BlockIterator //: std::iterator<std::forward_iterator_tag, AssemblyItem const>
 	{
 	public:
 		BlockIterator(
@@ -83,6 +83,12 @@ private:
 		AssemblyItems::const_iterator end;
 		AssemblyItem const* replaceItem;
 		AssemblyItem const* replaceWith;
+
+		typedef std::forward_iterator_tag iterator_category;
+		typedef std::ptrdiff_t difference_type;
+		typedef AssemblyItems& reference;
+		typedef AssemblyItems* pointer;
+		typedef AssemblyItem value_type;
 	};
 
 	std::map<u256, u256> m_replacedTags;

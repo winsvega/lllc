@@ -1,6 +1,19 @@
 commit_hash.txt
 prerelease.txt
 
+
+.DS_Store
+node_modules
+*.dylib
+*.dll
+*.slo
+*.lo
+*.o
+*.obj
+solidity_*
+*.tar.gz
+*.zip
+
 # Compiled Object files
 *.slo
 *.lo
